@@ -5,6 +5,8 @@ import com.example.crud_test_exercise.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService {
 
@@ -12,7 +14,12 @@ public class UserService {
     private UserRepository userRepository;
 
     // crea un nuovo utente:
-    public User createUser(User newUser){
-        return userRepository.save(newUser);
+    public User createUser(User user){
+        return userRepository.save(user);
+    }
+
+    // trova tutti gli utenti:
+    public List<User> getUsers() {
+        return userRepository.findAll();
     }
 }
