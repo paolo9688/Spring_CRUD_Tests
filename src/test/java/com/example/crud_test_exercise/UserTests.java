@@ -61,8 +61,9 @@ class UserTests {
 		assertThat(userController).isNotNull();
 	}
 
+	// test per crea un nuovo utente:
 	@Test
-	public void testCreate() throws Exception{
+	public void createUserTest() throws Exception{
 		when(userService.createUser(any(User.class))).thenReturn(user);
 
 		mockMvc.perform(post("/api/user/create-user")
@@ -73,11 +74,23 @@ class UserTests {
 				.andDo(print());
 	}
 
+	// test per trova tutti gli utenti:
 	@Test
-	public void testGet() throws Exception{
+	public void getUsersTest() throws Exception{
 		when(userService.getUsers()).thenReturn(List.of(user));
 
 		mockMvc.perform(get("/api/user/find-users")
+						.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andDo(print());
+	}
+
+	// test per trova un utente per id:
+	@Test
+	public void getUserByIdTest() throws Exception{
+		when(userService.getUserById(user.getId())).thenReturn(Optional.of(user));
+
+		mockMvc.perform(get("/api/user/find-user-by-id/" + user.getId())
 						.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andDo(print());

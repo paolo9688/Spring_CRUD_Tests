@@ -48,7 +48,7 @@ public class User {
         this.surname = surname;
     }
 
-    public boolean isWorking() {
+    public boolean getWorking() {
         return isWorking;
     }
 
