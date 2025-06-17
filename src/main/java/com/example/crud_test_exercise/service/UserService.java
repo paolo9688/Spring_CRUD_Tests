@@ -16,25 +16,26 @@ public class UserService {
 
     // crea un nuovo utente:
     public User createUser(User user){
-        return userRepository.save(user);
+        User newUser = userRepository.save(user);
+
+        return newUser;
     }
 
     // trova tutti gli utenti:
     public List<User> getUsers() {
-        return userRepository.findAll();
+        List<User> listUsers = userRepository.findAll();
+
+        return listUsers;
     }
 
     // trova un utente per id:
     public Optional<User> getUserById(Long id) {
         Optional<User> userOptional = userRepository.findById(id);
 
-        if (userOptional.isPresent()) {
-            return userOptional;
-        }
-        return Optional.empty();
+        return userOptional;
     }
 
-    // cancella un utente:
+    // cancella un utente per id:
     public Optional<User> deleteUser(Long id) {
         Optional<User> userOptional = userRepository.findById(id);
 
@@ -45,7 +46,7 @@ public class UserService {
         return Optional.empty();
     }
 
-    // aggiorna un utente:
+    // aggiorna un utente per id:
     public Optional<User> updateUser(Long id, User userDetails) {
         Optional<User> userOptional = userRepository.findById(id);
 

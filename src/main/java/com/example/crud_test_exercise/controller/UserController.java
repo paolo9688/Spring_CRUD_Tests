@@ -3,6 +3,7 @@ package com.example.crud_test_exercise.controller;
 import com.example.crud_test_exercise.entity.User;
 import com.example.crud_test_exercise.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,41 +27,41 @@ public class UserController {
     @GetMapping("/find-users")
     public ResponseEntity<List<User>> getUsers() {
         List<User> usersToFind = userService.getUsers();
+
         return ResponseEntity.ok(usersToFind);
     }
 
     // trova un utente per id:
     @GetMapping("/find-user-by-id/{id}")
-    public ResponseEntity<Optional<User>> getUserById(@PathVariable("id") Long id) {
+    public ResponseEntity<User> getUserById(@PathVariable("id") Long id) {
         Optional<User> userToFind = userService.getUserById(id);
 
         if (userToFind.isPresent()) {
-            return ResponseEntity.ok(userToFind);
+            return ResponseEntity.ok(userToFind.get());
         }
         return ResponseEntity.notFound().build();
     }
 
-    // cancella un utente:
+    // cancella un utente per id:
     @DeleteMapping("/delete-user/{id}")
-    public ResponseEntity<Optional<User>> deleteUtente(@PathVariable Long id) {
-        Optional<User> utenteToFind = userService.getUserById(id);
+    public ResponseEntity<String> deleteUser(@PathVariable("id") Long id) {
+        Optional<User> utenteToDelete = userService.deleteUser(id);
 
-        if (utenteToFind.isPresent()) {
-            Optional<User> utenteToDelete = userService.deleteUser(id);
-            return ResponseEntity.ok(utenteToDelete);
+        if (utenteToDelete.isPresent()) {
+            return ResponseEntity.ok("User with ID " + utenteToDelete.get().getId()
+                    + " has been successfully deleted.");
         }
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
     }
 
-    // aggiorna un utente:
+    // aggiorna un utente per id:
     @PutMapping("/update-user/{id}")
-    public ResponseEntity<Optional<User>> updateUtente(@PathVariable Long id,
+    public ResponseEntity<User> updateUtente(@PathVariable Long id,
                                                        @RequestBody User userDetails) {
-        Optional<User> userToFind = userService.getUserById(id);
+        Optional<User> userToUpdate = userService.updateUser(id, userDetails);
 
-        if (userToFind.isPresent()) {
-            Optional<User> userToUpdate = userService.updateUser(id, userDetails);
-            return ResponseEntity.ok(userToUpdate);
+        if (userToUpdate.isPresent()) {
+            return ResponseEntity.ok(userToUpdate.get());
         }
         return ResponseEntity.notFound().build();
     }

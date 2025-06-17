@@ -95,4 +95,15 @@ class UserTests {
 				.andExpect(status().isOk())
 				.andDo(print());
 	}
+
+	// test per cancellare un utente:
+	@Test
+	public void deleteUtenteTest() throws Exception{
+		when(userService.deleteUser(user.getId())).thenReturn(Optional.of(user));
+
+		mockMvc.perform(delete("/api/user/delete-user/" + user.getId())
+						.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isNoContent())
+				.andDo(print());
+	}
 }
