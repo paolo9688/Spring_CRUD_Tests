@@ -85,9 +85,9 @@ class UserTests {
 				.andDo(print());
 	}
 
-	// test per trova un utente per id:
+	// test per trova un utente per id (caso positivo):
 	@Test
-	public void getUserByIdTest() throws Exception{
+	public void getUserByIdTestPositive() throws Exception{
 		when(userService.getUserById(user.getId())).thenReturn(Optional.of(user));
 
 		mockMvc.perform(get("/api/user/find-user-by-id/" + user.getId())
@@ -96,14 +96,36 @@ class UserTests {
 				.andDo(print());
 	}
 
-	// test per cancellare un utente:
+	// test per trova un utente per id (caso negativo):
 	@Test
-	public void deleteUtenteTest() throws Exception{
-		when(userService.deleteUser(user.getId())).thenReturn(Optional.of(user));
+	public void getUserByIdTestNegative() throws Exception{
+		when(userService.getUserById(user.getId())).thenReturn(Optional.of(user));
+
+		mockMvc.perform(get("/api/user/find-user-by-id/0")
+						.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isNotFound())
+				.andDo(print());
+	}
+
+	// test per cancellare un utente (caso positivo):
+	@Test
+	public void deleteUtenteTestPositive() throws Exception{
+		when(userService.deleteUser(user.getId())).thenReturn(Optional.of(user)); // mi crea l'utente con le specifiche che gli ho dato
 
 		mockMvc.perform(delete("/api/user/delete-user/" + user.getId())
+						.contentType(MediaType.APPLICATION_JSON)) // mi dice il tipo di ritorno che voglio
+				.andExpect(status().isOk()) // il tipo di risposta che dovrei in teoria avere
+				.andDo(print());
+	}
+
+	// test per cancellare un utente (caso negativo):
+	@Test
+	public void deleteUtenteTestNegative() throws Exception{
+		when(userService.deleteUser(user.getId())).thenReturn(Optional.of(user));
+
+		mockMvc.perform(delete("/api/user/delete-user/0")
 						.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isNoContent())
+				.andExpect(status().isNotFound())
 				.andDo(print());
 	}
 }
